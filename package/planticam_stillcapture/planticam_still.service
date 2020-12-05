@@ -1,0 +1,14 @@
+[Unit]
+Description=Planticam still image capture service
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/planticam_stillcapture/capture.py
+Type=oneshot
+RemainAfterExit=no
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=planticamstill
+WorkingDirectory=/opt/planticam_stillcapture
+
+[Install]
+WantedBy=basic.target

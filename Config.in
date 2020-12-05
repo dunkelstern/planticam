@@ -1,0 +1,4 @@
+source "$BR2_EXTERNAL_PLANTICAM_PATH/package/soft-hwclock/Config.in"
+source "$BR2_EXTERNAL_PLANTICAM_PATH/package/picamera/Config.in"
+source "$BR2_EXTERNAL_PLANTICAM_PATH/package/planticam_web/Config.in"
+source "$BR2_EXTERNAL_PLANTICAM_PATH/package/planticam_stillcapture/Config.in"

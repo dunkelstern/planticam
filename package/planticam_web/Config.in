@@ -1,0 +1,7 @@
+config BR2_PACKAGE_PLANTICAM_WEB
+	bool "Planticam web-interface"
+	select BR2_PACKAGE_LIBV4L_UTILS
+	help
+	  Install Planticam web interface
+          
+          This will install python and the flask framework

@@ -1,0 +1,4 @@
+output
+board/raspberrypi0
+configs/raspberrypi0_defconfig
+/camera.txt

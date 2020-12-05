@@ -1,0 +1,7 @@
+config BR2_PACKAGE_PLANTICAM_STILLCAPTURE
+	bool "Planticam still capture service"
+	select BR2_PACKAGE_LIBV4L_UTILS
+	help
+	  Install Planticam stillimage capture service
+          
+          This will install python and the picamera package 

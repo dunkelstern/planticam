@@ -36,12 +36,12 @@ __EOF__
 		gpu_mem="${arg:2}"
 		sed -e "/^${gpu_mem%=*}=/s,=.*,=${gpu_mem##*=}," -i "${BINARIES_DIR}/rpi-firmware/config.txt"
 		;;
-		--configure-picam)
-		# Configure picam
-		if ! grep -qE '^dtoverlay=dwc2' "${BINARIES_DIR}/rpi-firmware/config.txt"; then
+		--configure-planticam)
+		# Configure planticam
+		if ! grep -qE '^dtoverlay=dwc2,g_ether' "${BINARIES_DIR}/rpi-firmware/config.txt"; then
 
 			cat << __EOF__ >> "${BINARIES_DIR}/rpi-firmware/config.txt"
-dtoverlay=dwc2
+dtoverlay=dwc2,g_ether
 __EOF__
 		fi
 
@@ -76,22 +76,47 @@ __EOF__
 			sed '/^root=/ s/$/ modules-load=dwc2,libcomposite/' -i "${BINARIES_DIR}/rpi-firmware/cmdline.txt"
 		fi
 
+		# Random seed, else the ssh daemon will block on boot
+		RND=`head -c 250 /dev/urandom |base64 -w0 -`
+		if ! grep -qE 'systemd.random_seed=' "${BINARIES_DIR}/rpi-firmware/cmdline.txt"; then
+			sed '/^root=/ s@$@ systemd.random_seed='$RND'@' -i "${BINARIES_DIR}/rpi-firmware/cmdline.txt"
+		else
+			sed 's@systemd.random_seed=[^ ]*@systemd.random_seed='$RND'@' -i "${BINARIES_DIR}/rpi-firmware/cmdline.txt"
+		fi
+
 		# Suppress kernel output during boot
 		if ! grep -qE 'quiet' "${BINARIES_DIR}/rpi-firmware/cmdline.txt"; then
 			sed '/^root=/ s/$/ quiet/' -i "${BINARIES_DIR}/rpi-firmware/cmdline.txt"
 		fi
+		
+		# Add example config
+		cp "$BR2_EXTERNAL_PLANTICAM_PATH/wpa_supplicant.conf" "${BINARIES_DIR}/rpi-firmware/wpa_supplicant.conf"
+		cp "$BR2_EXTERNAL_PLANTICAM_PATH/planticam.conf" "${BINARIES_DIR}/rpi-firmware/planticam.conf"
 
-		# Add default camera.txt and add custom config if it exists
-		cp "$BR2_EXTERNAL_PICAM_PATH/package/piwebcam/camera.txt" "${BINARIES_DIR}/camera.txt"
-		if [ -f "$BR2_EXTERNAL_PICAM_PATH/camera.txt" ]; then
-			cat << __EOF__ >> "${BINARIES_DIR}/camera.txt"
-
-# User settings added during build
-
-__EOF__
-			cat "$BR2_EXTERNAL_PICAM_PATH/camera.txt" >> "${BINARIES_DIR}/camera.txt"
+		# ssh client keys
+		if [ ! -e id_ed25519 ] ; then
+			ssh-keygen -t ed25519 -f id_ed25519 -q -N ""
+			cp id_ed25519* "${BINARIES_DIR}/rpi-firmware/"
 		fi
 
+		# ssh host keys
+		mkdir -p "${BINARIES_DIR}/rpi-firmware/ssh-keys/"
+		if [ ! -f ssh_host_rsa_key ] ; then
+			ssh-keygen -t rsa -f ssh_host_rsa_key -C '' -N ''
+			cp ssh_host_rsa_key* "${BINARIES_DIR}/rpi-firmware/ssh-keys/"
+		fi
+		if [ ! -f ssh_host_dsa_key ] ; then
+			ssh-keygen -t dsa -f ssh_host_dsa_key -C '' -N ''
+			cp ssh_host_dsa_key* "${BINARIES_DIR}/rpi-firmware/ssh-keys/"
+		fi
+		if [ ! -f ssh_host_ecdsa_key ] ; then
+			ssh-keygen -t ecdsa -f ssh_host_ecdsa_key -C '' -N ''
+			cp ssh_host_ecdsa_key* "${BINARIES_DIR}/rpi-firmware/ssh-keys/"
+		fi
+		if [ ! -f ssh_host_ed25519_key ] ; then
+			ssh-keygen -t ed25519 -f ssh_host_ed25519_key -C '' -N ''
+			cp ssh_host_ed25519_key* "${BINARIES_DIR}/rpi-firmware/ssh-keys/"
+		fi
 		;;
 	esac
 

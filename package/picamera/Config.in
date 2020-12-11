@@ -1,4 +1,0 @@
-config BR2_PACKAGE_PYTHON_PICAMERA
-	bool "Python package Picamera"
-	help
-	  Install Picamera python module

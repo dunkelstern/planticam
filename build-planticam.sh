@@ -12,5 +12,12 @@ if [ "$BUILDROOT_DIR" = "" ] ; then
 	fi
 fi
 
+if [ "$1" = "clean" ] ; then
+	echo "Cleaning up"
+	rm -rf output/planticam/target
+	rm -rf output/planticam/build/planticam*
+	rm -rf output/planticam/per-package/planticam*
+fi
+
 BR2_EXTERNAL="$(pwd)" make O="$(pwd)/output/$PROJECT" -C "$BUILDROOT_DIR" "$target_defconfig"
 make -C "output/$PROJECT" all

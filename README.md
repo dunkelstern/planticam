@@ -13,6 +13,7 @@ it looses power (for example because it is turned on and off by a timer switch)
 - Image upload to storage server, no local storage
 - RTMP video streaming (WIP)
 - Audio recording (WIP, only if hardware is available)
+- 3D printed case AMF and FreeCAD files
 
 ## Todo
 
@@ -21,7 +22,6 @@ it looses power (for example because it is turned on and off by a timer switch)
 - Make video and timelapse modes cooperate
 - Audio recording
 - Web-interface
-- 3D printed case STL and FreeCAD files
 - Add sensor readouts on GPIO header to be added as overlay onto the image or stored in exif metadata
 - Add sensor plugin interface to allow the user to add sensor readout plugins to the boot partition
 - Screenshots and photo of the finished device
@@ -34,7 +34,7 @@ it looses power (for example because it is turned on and off by a timer switch)
 - A compatible lens if you use the HQ Camera sensor.
 - Micro SD card
 - Some sort of a case for the electronics (either a Raspi Zero case with camera hole or use the
-  3D printer ready STL files in the `case` subdir)
+  3D printer ready AMF files in the `case` subdir)
 - The camera firmware image from the release page
 
 ## How to use

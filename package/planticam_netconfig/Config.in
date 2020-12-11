@@ -1,0 +1,4 @@
+config BR2_PACKAGE_PLANTICAM_NETCONFIG
+	bool "Planticam network config"
+	help
+          Install network configuration 

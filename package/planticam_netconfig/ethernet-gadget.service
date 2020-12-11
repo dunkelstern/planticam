@@ -1,0 +1,11 @@
+[Unit]
+Description=USB Ethernet gadget
+Before=dnsmasq.service network.target
+
+[Service]
+Type=oneshot
+ExecStartPre=/usr/bin/sh /usr/bin/var.sh
+ExecStart=/usr/bin/sh /usr/bin/ethernet-gadget.sh 
+
+[Install]
+WantedBy=network.target

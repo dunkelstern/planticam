@@ -1,0 +1,12 @@
+# loopback
+auto lo
+iface lo inet loopback
+
+auto usb0
+iface usb0 inet static
+	address 10.0.77.1
+	network 10.0.77.0
+	netmask 255.255.255.0
+
+auto wlan0
+iface wlan0 inet dhcp

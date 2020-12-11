@@ -1,11 +1,6 @@
-################################################################################
-#
-# piwebcam
-#
-################################################################################
-
 PLANTICAM_STILLCAPTURE_VERSION = 1.0
-#PLANTICAM_STILLCAPTURE_SITE = git://github.com/peterbay/uvc-gadget.git
+PLANTICAM_STILLCAPTURE_SITE = 
+PLANTICAM_STILLCAPTURE_SOURCE = 
 PLANTICAM_STILLCAPTURE_LICENSE = BSD-3-Clause
 PLANTICAM_STILLCAPTURE_LICENSE_FILES = LICENSE
 PLANTICAM_STILLCAPTURE_DEST_DIR = /opt/planticam_stillcapture
@@ -18,14 +13,15 @@ endef
 
 define PLANTICAM_STILLCAPTURE_INSTALL_TARGET_CMDS
 	mkdir -p $(TARGET_DIR)$(PLANTICAM_STILLCAPTURE_DEST_DIR)
+
+	$(INSTALL) -d -D -m 0755 $(PLANTICAM_STILLCAPTURE_PKGDIR)/picamera $(TARGET_DIR)$(PLANTICAM_STILLCAPTURE_DEST_DIR)/picamera
+	$(INSTALL) -D -m 0755 $(PLANTICAM_STILLCAPTURE_PKGDIR)/picamera/* $(TARGET_DIR)$(PLANTICAM_STILLCAPTURE_DEST_DIR)/picamera/
 	$(INSTALL) -D -m 0755 $(PLANTICAM_STILLCAPTURE_PKGDIR)/capture.py $(TARGET_DIR)$(PLANTICAM_STILLCAPTURE_DEST_DIR)
 endef
 
 define PLANTICAM_STILLCAPTURE_INSTALL_INIT_SYSTEMD
 	mkdir -p $(TARGET_DIR)/etc/systemd/system/$(PLANTICAM_STILLCAPTURE_INIT_SYSTEMD_TARGET)
-	$(INSTALL) -D -m 644 $(PLANTICAM_STILLCAPTURE_PKGDIR)/planticam_still.service $(TARGET_DIR)/usr/lib/systemd/system
-	$(INSTALL) -D -m 644 $(PLANTICAM_STILLCAPTURE_PKGDIR)/planticam_still.timer $(TARGET_DIR)/usr/lib/systemd/system
-	ln -sf /usr/lib/systemd/system/planticam_still.timer $(TARGET_DIR)/etc/systemd/system/$(PLANTICAM_STILLCAPTURE_INIT_SYSTEMD_TARGET)
+	$(INSTALL) -D -m 644 $(PLANTICAM_STILLCAPTURE_PKGDIR)/planticam_still.service $(TARGET_DIR)/usr/lib/systemd/system/planticam_sill.service
 endef
 
 $(eval $(generic-package))

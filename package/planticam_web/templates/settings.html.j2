@@ -1,0 +1,53 @@
+{% extends "base.html.j2" %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<h2>System Settings</h2>
+
+<p>Here you can configure the basic system settings, usually you only have to touch this page once and leave all settings
+as they are afterwards</p>
+
+<ul uk-accordion="multiple: true">
+    <li class="uk-open">
+        <a class="uk-accordion-title uk-background-muted uk-padding-small" href="#">Wifi setup</a>
+        <div class="uk-accordion-content">
+            <form class="uk-form-horizontal uk-margin-large" action="{{ url_for('settings.settings_view') }}" method="POST">
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-wifi-bssid">WiFi Network name</label>
+                    <div class="uk-form-controls">
+                        <input name="bssid" class="uk-input" id="form-wifi-bssid" type="text" placeholder="Name">
+                    </div>
+                </div>
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-password">WiFi Password</label>
+                    <div class="uk-form-controls">
+                        <input name="password" class="uk-input" id="form-password" type="password" placeholder="Password">
+                    </div>
+                </div>
+
+                <div class="uk-margin" uk-margin>
+                    <button class="uk-button uk-button-default uk-align-right">Save</button>
+                </div>
+
+            </form>
+        </div>
+    </li>
+    <li>
+        <a class="uk-accordion-title uk-background-muted uk-padding-small" href="#">SSH Host keys</a>
+        <div class="uk-accordion-content">
+            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor reprehenderit.</p>
+        </div>
+    </li>
+    <li>
+        <a class="uk-accordion-title uk-background-muted uk-padding-small" href="#">SSH Client key</a>
+        <div class="uk-accordion-content">
+            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat proident.</p>
+        </div>
+    </li>
+</ul>
+
+
+{% endblock %}

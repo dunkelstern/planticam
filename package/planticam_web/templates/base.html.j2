@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/uikit.min.css') }}" />
+        <script src="{{ url_for('static', filename='js/uikit.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/uikit-icons.min.js') }}"></script>
+        {% block header %}{% endblock %}
+    </head>
+    <body>
+
+    <nav class="uk-navbar-container uk-margin" uk-navbar>
+        <div class="uk-navbar-left">
+
+            <a class="uk-navbar-item uk-logo" href="#"><img src="{{ url_for('static', filename='img/logo.svg') }}" uk-svg></a>
+
+            <div class="uk-navbar-item">
+                <div>Planticam</div>
+            </div>
+
+            <ul class="uk-navbar-nav">
+                <li {% if nav == '/settings' %}class="uk-active"{% endif %}>
+                    <a href="{{ url_for('settings.settings_view') }}">
+                        <span class="uk-icon uk-margin-small-right" uk-icon="icon: settings"></span>
+                        System
+                    </a>
+                </li>
+                <li {% if nav == '/camera' %}class="uk-active"{% endif %}>
+                    <a href="{{ url_for('camera.camera_view') }}">
+                        <span class="uk-icon uk-margin-small-right" uk-icon="icon: camera"></span>
+                        Camera
+                    </a>
+                </li>
+                <li {% if nav == '/timelapse' %}class="uk-active"{% endif %}>
+                    <a href="{{ url_for('timelapse.timelapse_view') }}">
+                        <span class="uk-icon uk-margin-small-right" uk-icon="icon: image"></span>
+                        Timelapse
+                    </a>
+                </li>
+                <li {% if nav == '/video' %}class="uk-active"{% endif %}>
+                    <a href="{{ url_for('video.video_view') }}">
+                        <span class="uk-icon uk-margin-small-right" uk-icon="icon: video-camera"></span>
+                        Video
+                    </a>
+                </li>
+                <li {% if nav == '/about' %}class="uk-active"{% endif %}>
+                    <a href="{{ url_for('about.about_view') }}">
+                        <span class="uk-icon uk-margin-small-right" uk-icon="icon: info"></span>
+                        About
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+
+    <div class="uk-card uk-card-default uk-width-medium uk-align-right" style="z-index: 980;" uk-sticky="bottom: #offset">
+            <div class="uk-card-media-top">
+                <img id="last_capture_image" src="current_image.jpg" alt="Last camera image taken">
+            </div>
+            <div class="uk-card-body">
+                <p>Last camera image: <span id="last_capture_date">{{ last_capture_date }}</span></p>
+            </div>
+    </div>
+
+    <div class="uk-grid-small uk-flex-center" uk-grid>
+        <div class="uk-width-2xlarge">
+        {% block content %}
+        {% endblock %}
+        </div>
+    </div>
+
+    </body>
+</html>
+

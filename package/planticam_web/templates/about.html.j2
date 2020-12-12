@@ -1,0 +1,40 @@
+{% extends "base.html.j2" %}
+
+{% block title %}About{% endblock %}
+
+{% block content %}
+<h2>About planticam</h2>
+
+<p>TODO: Insert about text and licenses</p>
+
+<ul uk-accordion="multiple: true">
+    <li>
+        <a class="uk-accordion-title uk-background-muted uk-padding-small" href="#">License info</a>
+        <div class="uk-accordion-content">
+            <form class="uk-form-horizontal uk-margin-large" action="{{ url_for('settings.settings_view') }}" method="POST">
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-wifi-bssid">WiFi Network name</label>
+                    <div class="uk-form-controls">
+                        <input name="bssid" class="uk-input" id="form-wifi-bssid" type="text" placeholder="Name">
+                    </div>
+                </div>
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-password">WiFi Password</label>
+                    <div class="uk-form-controls">
+                        <input name="password" class="uk-input" id="form-password" type="password" placeholder="Password">
+                    </div>
+                </div>
+
+                <div class="uk-margin" uk-margin>
+                    <button class="uk-button uk-button-default uk-align-right">Save</button>
+                </div>
+
+            </form>
+        </div>
+    </li>
+</ul>
+
+
+{% endblock %}

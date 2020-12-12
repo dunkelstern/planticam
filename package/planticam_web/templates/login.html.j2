@@ -1,0 +1,29 @@
+{% extends "base.html.j2" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<h2>Login</h2>
+
+<form class="uk-form-horizontal uk-margin-large" action="{{ url_for('login.login_view') }}" method="POST">
+
+    <div class="uk-margin">
+        <label class="uk-form-label" for="form-username">Username</label>
+        <div class="uk-form-controls">
+            <input name="username" class="uk-input" id="form-username" type="text" placeholder="Username">
+        </div>
+    </div>
+
+    <div class="uk-margin">
+        <label class="uk-form-label" for="form-password">Password</label>
+        <div class="uk-form-controls">
+            <input name="password" class="uk-input" id="form-password" type="password" placeholder="Password">
+        </div>
+    </div>
+
+    <div class="uk-margin" uk-margin>
+        <button class="uk-button uk-button-default uk-align-right">Login</button>
+    </div>
+
+</form>
+{% endblock %}

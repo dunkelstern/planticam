@@ -2,7 +2,7 @@
 Description=Planticam webinterface
 
 [Service]
-ExecStart=/usr/bin/python3 /opt/planticam_web/flask.py
+ExecStart=/usr/bin/python3 /opt/planticam_web/main.py
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=planticamweb

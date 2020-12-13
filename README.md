@@ -239,8 +239,6 @@ destination=rtmp://example.com/live/planticam
 - `post_url`: (optional) URL to upload the image to, it will send a `HTTP POST`-request with `Content-Type: image/jpeg`
   and the JPEG binary as is in the body
 
-You can add any of the "Image settings" described below here too.
-
 ### \[stream\]
 
 - `enabled`: boolean value, enable the video mode. Be aware that video streaming mode overrides the image resolution of
@@ -251,25 +249,23 @@ You can add any of the "Image settings" described below here too.
 - `destination`: RTMP server URL to stream the video to
 - `include_audio`: boolean value, if you have a sound device on the Pi you can enable the audio track with this setting
 
-You can add any of the "Image settings" described below here too.
-
-### Image settings
+### \[image_settings\]
 
 - `resolution_x` and `resolution_y`: Image resolution, see
   [picamera documentation](https://picamera.readthedocs.io/en/release-1.12/fov.html) for explanation what the cameras
   can do
-- `awb_mode`: (optional) White-balance mode to use (one of `off`, `auto`, `sunlight`, `cloudy`, `shade`, `tungsten`,
-  `fluorescent`, `incandescent`, `flash` or `horizon`)
-- `brightness`: (optional) Brightness from 0-100, defaults to 50
-- `contrast`: (optional) Contrast from -100-100, defaults to 0
+- `rotation`: (optional) Rotates the image in 90 degree increments
+- `iso`: (optional) ISO to use, defaults to `auto` (one of `auto`, 100, 200, 320, 400, 500, 640, 800)
 - `exposure_mode`: (optional) Exposure mode to use (one of `off`, `auto`, `night`, `nightpreview`, `backlight`,
   `spotlight`, `sports`, `snow`, `beach`, `verylong`, `fixedfps`, `antishake` or `fireworks`)
 - `exposure_compensation`: (optional) Adjusts the camera’s exposure compensation level. Each increment represents
   1/6th of a stop. Range is -25 to 25, defaults to 0
-- `iso`: (optional) ISO to use, defaults to `auto` (one of `auto`, 100, 200, 320, 400, 500, 640, 800)
 - `meter_mode`: (optional) Exposure metering mode, defaults to `average` (one of `average`, `spot`, `backlit` or
   `matrix`)
-- `rotation`: (optional) Rotates the image in 90 degree increments
+- `awb_mode`: (optional) White-balance mode to use (one of `off`, `auto`, `sunlight`, `cloudy`, `shade`, `tungsten`,
+  `fluorescent`, `incandescent`, `flash` or `horizon`)
+- `brightness`: (optional) Brightness from 0-100, defaults to 50
+- `contrast`: (optional) Contrast from -100-100, defaults to 0
 
 
 ## Credits

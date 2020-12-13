@@ -9,6 +9,7 @@ from flask_login import UserMixin
 from flask_login.mixins import AnonymousUserMixin
 
 from .config import get_config
+from .save import save_config
 
 PBKDF2_ITERATIONS = 50000
 PBKDF2_ALGO = 'sha256'
@@ -20,17 +21,22 @@ class Anonymous(AnonymousUserMixin):
 
 class User(UserMixin):
 
-    def __init__(self, username: str):
-        self.username = username
-
     def get_id(self) -> str:
         return self.username
 
-    def update_username(self, new_name: str) -> None:
-        self.username = new_name
+    @property
+    def username(self) -> str:
         config = get_config()
-        config['web']['username'] = new_name
-        config.save()
+        return config['web']['username']
+
+    @username.setter
+    def username(self, value) -> None:
+        config = get_config()
+        config['web']['username'] = value
+
+    def save(self):
+        config = get_config()
+        save_config(config)
 
     def update_password(self, new_password: str) -> None:
         salt = urlsafe_b64encode(os.urandom(16))
@@ -41,15 +47,15 @@ class User(UserMixin):
                 salt,
                 PBKDF2_ITERATIONS
             )
-        )
+        ).decode('utf-8')
+
         config = get_config()
         config['web']['password'] = '{algo}:{iterations}:{salt}:{hash}'.format(
             algo=PBKDF2_ALGO,
-            salt=str(salt),
+            salt=salt.decode('utf-8'),
             iterations=PBKDF2_ITERATIONS,
             hash=new_hash
         )
-        config.save()
 
 
 def authenticate(username: str, password: str) -> Union[User, Anonymous]:
@@ -77,6 +83,6 @@ def authenticate(username: str, password: str) -> Union[User, Anonymous]:
 
         # hashes match, return user object
         if stored_hash == password_hash:
-            return User(username)
+            return User()
 
     return Anonymous()

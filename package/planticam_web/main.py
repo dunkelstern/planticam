@@ -28,7 +28,7 @@ with app.app_context():
 def load_user(user_id):
     # reload config in case the user info changed
     reload_config()
-    return User(user_id)
+    return User()
 
 
 @login_manager.unauthorized_handler

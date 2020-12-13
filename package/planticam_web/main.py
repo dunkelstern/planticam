@@ -1,9 +1,10 @@
+import os
 from datetime import datetime
 
-from flask import Flask, redirect, url_for, request
-from flask_login import LoginManager, login_required
+from flask import Flask, redirect, url_for, request, send_file
+from flask_login import LoginManager, login_required, current_user
 
-from util.user import User
+from util.user import User, Anonymous
 from util.config import get_config, reload_config
 from views import login, settings, about, camera, timelapse, video
 
@@ -41,14 +42,31 @@ def inject_navigation():
 
 @app.context_processor
 def inject_last_capture():
+    if os.path.exists('/tmp/capture_thumb.jpg'):
+        mtime = datetime.fromtimestamp(os.path.getmtime('/tmp/capture_thumb.jpg'))
+    else:
+        mtime = None
+
     return dict(
-        last_capture_date=datetime.now()
+        last_capture_date=mtime
     )
 
 @app.route('/')
 @login_required
 def index():
     return redirect(url_for('settings.settings_view'))
+
+
+@app.route('/current_image.jpg')
+def current_image():
+    if isinstance(current_user, Anonymous):
+        img = open('static/img/placeholder.jpg', 'rb')
+    else:
+        if os.path.exists('/tmp/capture_thumb.jpg'):
+            img = open('/tmp/capture_thumb.jpg', 'rb')
+        else:
+            img = open('static/img/placeholder.jpg', 'rb')
+    return send_file(img, mimetype='image/jpeg')
 
 
 if __name__ == '__main__':

@@ -11,13 +11,13 @@
     </head>
     <body>
 
-    <nav class="uk-navbar-container uk-margin" uk-navbar>
+    <nav class="uk-navbar-container uk-margin" uk-navbar uk-sticky>
         <div class="uk-navbar-left">
 
             <a class="uk-navbar-item uk-logo" href="#"><img src="{{ url_for('static', filename='img/logo.svg') }}" uk-svg></a>
 
             <div class="uk-navbar-item">
-                <div>Planticam</div>
+                <div class="uk-text-large uk-text-primary uk-text-bold">Planticam</div>
             </div>
 
             <ul class="uk-navbar-nav">
@@ -52,20 +52,29 @@
                     </a>
                 </li>
             </ul>
-
         </div>
+        <div class="uk-navbar-right">
+            <div class="uk-navbar-item">
+                <form method="POST" action="{{ url_for('login.logout_view') }}">
+                    <button class="uk-button uk-button-default"><span class="uk-icon uk-margin-small-right" uk-icon="icon: sign-out"></span> Logout</button>
+                </form>
+            </div>
+        </div>
+
     </nav>
 
-    <div class="uk-card uk-card-default uk-width-medium uk-align-right" style="z-index: 980;" uk-sticky="bottom: #offset">
+    <div class="uk-card uk-card-default uk-width-medium" style="z-index: 980; position: fixed; right: 0;">
             <div class="uk-card-media-top">
-                <img id="last_capture_image" src="current_image.jpg" alt="Last camera image taken">
+                <img id="last_capture_image" src="current_image.jpg" width="300" alt="Last camera image taken">
             </div>
             <div class="uk-card-body">
-                <p>Last camera image: <span id="last_capture_date">{{ last_capture_date }}</span></p>
+                <p>Last camera image: <br>
+                    <span id="last_capture_date">{% if last_capture_date %}{{ last_capture_date }}{% else %}No image captured{% endif %}</span>
+                </p>
             </div>
     </div>
 
-    <div class="uk-grid-small uk-flex-center" uk-grid>
+    <div class="uk-grid-small uk-flex-center uk-margin" uk-grid>
         <div class="uk-width-2xlarge">
         {% block content %}
         {% endblock %}

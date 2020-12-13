@@ -15,14 +15,59 @@ as they are afterwards</p>
             <form class="uk-form-horizontal uk-margin-large" action="{{ url_for('settings.settings_view') }}" method="POST">
 
                 <div class="uk-margin">
-                    <label class="uk-form-label" for="form-wifi-bssid">WiFi Network name</label>
+                    <label class="uk-form-label" for="form-wifi-name">WiFi Network name</label>
                     <div class="uk-form-controls">
-                        <input name="bssid" class="uk-input" id="form-wifi-bssid" type="text" placeholder="Name">
+                        <input name="wifi_name" class="uk-input uk-form-width-large" id="form-wifi-name" type="text" placeholder="Name" value="{{ wifi_name }}">
                     </div>
                 </div>
 
                 <div class="uk-margin">
-                    <label class="uk-form-label" for="form-password">WiFi Password</label>
+                    <label class="uk-form-label" for="form-wifi-password">WiFi Password</label>
+                    <div class="uk-form-controls">
+                        <div class="uk-inline">
+                            <script>
+                                function toggle_wifi_password() {
+                                    const button = document.getElementById('form-wifi-password-toggle');
+                                    const input = document.getElementById('form-wifi-password');
+
+                                    if (input.type === 'password') {
+                                        button.classList.add('uk-button-primary');
+                                        input.type = 'text';
+                                    } else {
+                                        button.classList.remove('uk-button-primary');
+                                        input.type = 'password';
+                                    }
+
+                                    return false;
+                                }
+                            </script>
+                            <button id='form-wifi-password-toggle' class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock" type="button" onclick="toggle_wifi_password()"></button>
+                            <input name="wifi_password" class="uk-input uk-form-width-large" id="form-wifi-password" type="password" placeholder="Password" value="{{ wifi_password }}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="uk-margin" uk-margin>
+                    <button class="uk-button uk-button-default uk-align-right">Save</button>
+                </div>
+
+            </form>
+        </div>
+    </li>
+    <li>
+        <a class="uk-accordion-title uk-background-muted uk-padding-small" href="#">Username and Password</a>
+        <div class="uk-accordion-content">
+            <form class="uk-form-horizontal uk-margin-large" action="{{ url_for('settings.settings_view') }}" method="POST">
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-username">User name</label>
+                    <div class="uk-form-controls">
+                        <input name="username" class="uk-input" id="form-username" type="text" value="{{ username }}">
+                    </div>
+                </div>
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-password">Password</label>
                     <div class="uk-form-controls">
                         <input name="password" class="uk-input" id="form-password" type="password" placeholder="Password">
                     </div>
@@ -35,16 +80,23 @@ as they are afterwards</p>
             </form>
         </div>
     </li>
+    <!-- TODO:
     <li>
         <a class="uk-accordion-title uk-background-muted uk-padding-small" href="#">SSH Host keys</a>
         <div class="uk-accordion-content">
-            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor reprehenderit.</p>
+            <form class="uk-form-horizontal uk-margin-large" action="{{ url_for('settings.settings_view') }}" method="POST">
+                <div class="uk-margin" uk-margin>
+                    <button class="uk-button uk-button-default uk-align-right">Re-Generate SSH Host keys</button>
+                </div>
+            </form>
         </div>
     </li>
+    -->
     <li>
         <a class="uk-accordion-title uk-background-muted uk-padding-small" href="#">SSH Client key</a>
         <div class="uk-accordion-content">
-            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat proident.</p>
+            <p>The public SSH client key is:</p>
+            <code>{{ ssh_pub_key }}</code>
         </div>
     </li>
 </ul>

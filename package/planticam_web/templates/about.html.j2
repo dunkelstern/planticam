@@ -5,33 +5,33 @@
 {% block content %}
 <h2>About planticam</h2>
 
-<p>TODO: Insert about text and licenses</p>
+<p>Planticam was created to make it possible for people that are not that far into Linux administration to set up
+a small IP camera like device based on the Raspberry Pi Zero W. The idea here is that everyone should be able
+to connect the camera, put everything into an enclosure and simply flash a SD-Card to be able to use the
+basic functionality.</p>
+<p>People with a more technical background should be able to extend the camera with everything a "real computer" built
+into a capable camera would be able to do. Be it just connecting some external (or internal) trigger methods, switching
+floodlights on and off to get a better picture or even add sensors to the device and put the measured data as an overlay
+over the image or embed the data into the EXIF data of the images.</p>
+<p>To make all that possible this firmware is based on a lot of opensource software. You will find the credits to
+everything in the accordeon pull-out below</p>
+
+<h3>Thanks to</h3>
+<ul>
+    <li>Buildroot: <a href="https://buildroot.org/">https://buildroot.org/</a> which provided all the complex lifting to
+    be able to build a firmware image like this with relative ease</li>
+    <li>ShowMeWebcam <a href="https://github.com/showmewebcam/showmewebcam">https://github.com/showmewebcam/showmewebcam</a>,
+    that introduced me to Buildroot and gave me the idea that the Raspberry Pi Zero is even capable of doing what I
+    intended to do</li>
+    <li>The people of my local makerspace <a href="https://das-habitat.de">das habitat Augsburg e.V</a> that beta-tested
+    and gave valuable feedback to make this thing possible</li>
+</ul>
 
 <ul uk-accordion="multiple: true">
     <li>
         <a class="uk-accordion-title uk-background-muted uk-padding-small" href="#">License info</a>
         <div class="uk-accordion-content">
-            <form class="uk-form-horizontal uk-margin-large" action="{{ url_for('settings.settings_view') }}" method="POST">
-
-                <div class="uk-margin">
-                    <label class="uk-form-label" for="form-wifi-bssid">WiFi Network name</label>
-                    <div class="uk-form-controls">
-                        <input name="bssid" class="uk-input" id="form-wifi-bssid" type="text" placeholder="Name">
-                    </div>
-                </div>
-
-                <div class="uk-margin">
-                    <label class="uk-form-label" for="form-password">WiFi Password</label>
-                    <div class="uk-form-controls">
-                        <input name="password" class="uk-input" id="form-password" type="password" placeholder="Password">
-                    </div>
-                </div>
-
-                <div class="uk-margin" uk-margin>
-                    <button class="uk-button uk-button-default uk-align-right">Save</button>
-                </div>
-
-            </form>
+            {{ license_html | safe }}
         </div>
     </li>
 </ul>

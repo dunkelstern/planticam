@@ -5,28 +5,38 @@
 {% block content %}
 <h2>Camera settings</h2>
 
-<p>Here you can configure the image post-processing for the captured images, this section will be used
+<p>Here you can configure the image processing for the captured images, this section will be used
 for both, video streaming and timelapse series.</p>
 
 <ul uk-accordion="multiple: true">
     <li class="uk-open">
-        <a class="uk-accordion-title uk-background-muted uk-padding-small" href="#">Exposure</a>
+        <a class="uk-accordion-title uk-background-muted uk-padding-small" href="#">Basics</a>
         <div class="uk-accordion-content">
-            <form class="uk-form-horizontal uk-margin-large" action="{{ url_for('settings.settings_view') }}" method="POST">
+            <form class="uk-form-horizontal uk-margin-large" action="{{ url_for('camera.camera_view') }}" method="POST">
 
                 <div class="uk-margin">
-                    <label class="uk-form-label" for="form-wifi-bssid">WiFi Network name</label>
+                    <label class="uk-form-label" for="form-resolution_x">Resolution</label>
                     <div class="uk-form-controls">
-                        <input name="bssid" class="uk-input" id="form-wifi-bssid" type="text" placeholder="Name">
+                        <div class="uk-inline">
+                            <input name="resolution_x" class="uk-input uk-form-width-medium" id="form-resolution_x" type="text" placeholder="Width">
+                            <span class="uk-margin">×</span>
+                            <input name="resolution_y" class="uk-input uk-form-width-medium" id="form-resolution_y" type="text" placeholder="Height">
+                        </div>
                     </div>
                 </div>
 
                 <div class="uk-margin">
-                    <label class="uk-form-label" for="form-password">WiFi Password</label>
+                    <label class="uk-form-label" for="form-rotation">Rotation</label>
                     <div class="uk-form-controls">
-                        <input name="password" class="uk-input" id="form-password" type="password" placeholder="Password">
+                        <select class="uk-select" id='form-rotation' name="rotation">
+                            <option value="0">0</option>
+                            <option value="90">90</option>
+                            <option value="180">180</option>
+                            <option value="270">270</option>
+                        </select>
                     </div>
                 </div>
+
 
                 <div class="uk-margin" uk-margin>
                     <button class="uk-button uk-button-default uk-align-right">Save</button>
@@ -36,9 +46,113 @@ for both, video streaming and timelapse series.</p>
         </div>
     </li>
     <li>
+        <a class="uk-accordion-title uk-background-muted uk-padding-small" href="#">Exposure</a>
+        <div class="uk-accordion-content">
+            <form class="uk-form-horizontal uk-margin-large" action="{{ url_for('camera.camera_view') }}" method="POST">
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-iso">ISO</label>
+                    <div class="uk-form-controls">
+                        <select class="uk-select" id='form-iso' name="iso">
+                            <option value="auto">auto</option>
+                            <option value="100">100</option>
+                            <option value="200">200</option>
+                            <option value="320">320</option>
+                            <option value="400">400</option>
+                            <option value="500">500</option>
+                            <option value="640">640</option>
+                            <option value="800">800</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-exposure_mode">Exposure mode</label>
+                    <div class="uk-form-controls">
+                        <select class="uk-select" id='form-exposure_mode' name="exposure_mode">
+                            <option value="auto">auto</option>
+                            <option value="off">off</option>
+                            <option value="night">night</option>
+                            <option value="nightpreview">nightpreview</option>
+                            <option value="backlight">backlight</option>
+                            <option value="spotlight">spotlight</option>
+                            <option value="sports">sports</option>
+                            <option value="snow">snow</option>
+                            <option value="beach">beach</option>
+                            <option value="verylong">verylong</option>
+                            <option value="fixedfps">fixedfps</option>
+                            <option value="antishake">antishake</option>
+                            <option value="fireworks">fireworks</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-exposure_compensation">Exposure compensation</label>
+                    <div class="uk-form-controls">
+                        <input name="exposure_compensation" id="form-exposure_compensation" class="uk-range" type="range" value="0" min="-25" max="25" step="1">
+                    </div>
+                </div>
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-metering_mode">Metering Mode</label>
+                    <div class="uk-form-controls">
+                        <select class="uk-select" id='form-metering_mode' name="metering_mode">
+                            <option value="average">average</option>
+                            <option value="spot">spot</option>
+                            <option value="backlit">backlit</option>
+                            <option value="matrix">matrix</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="uk-margin" uk-margin>
+                    <button class="uk-button uk-button-default uk-align-right">Save</button>
+                </div>
+            </form>
+        </div>
+    </li>
+    <li>
         <a class="uk-accordion-title uk-background-muted uk-padding-small" href="#">Color</a>
         <div class="uk-accordion-content">
-            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor reprehenderit.</p>
+            <form class="uk-form-horizontal uk-margin-large" action="{{ url_for('camera.camera_view') }}" method="POST">
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-awb_mode">Auto white balance mode</label>
+                    <div class="uk-form-controls">
+                        <select class="uk-select" id='form-awb_mode' name="awb_mode">
+                            <option value="auto">auto</option>
+                            <option value="off">off</option>
+                            <option value="sunlight">sunlight</option>
+                            <option value="cloudy">cloudy</option>
+                            <option value="shade">shade</option>
+                            <option value="tungsten">tungsten</option>
+                            <option value="fluorescent">fluorescent</option>
+                            <option value="incandescent">incandescent</option>
+                            <option value="flash">flash</option>
+                            <option value="horizon">horizon</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-brightness">Brightness</label>
+                    <div class="uk-form-controls">
+                        <input name="brightness" id="form-brightness" class="uk-range" type="range" value="50" min="0" max="100" step="1">
+                    </div>
+                </div>
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-contrast">Contrast</label>
+                    <div class="uk-form-controls">
+                        <input name="contrast" id="form-contrast" class="uk-range" type="range" value="0" min="-100" max="100" step="1">
+                    </div>
+                </div>
+
+                <div class="uk-margin" uk-margin>
+                    <button class="uk-button uk-button-default uk-align-right">Save</button>
+                </div>
+            </form>
         </div>
     </li>
 </ul>

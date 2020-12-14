@@ -26,23 +26,38 @@ def upload_file(config, date):
 		date=date
 	)
 
-	if 'upload_cmd' in config['timelapse']:
-		cmd = config['timelapse']['upload_cmd']
-		cmd = cmd.format(
-			input_file='/tmp/capture.jpg',
-			output_file=filename
-		)
-		os.system(cmd)
+	method = config['timelapse']['upload_mode']
+	if method in ['sftp', 'scp']:
+		if 'upload_cmd' in config['timelapse']:
+			cmd = config['timelapse']['upload_cmd']
+			cmd = cmd.format(
+				input_file='/tmp/capture.jpg',
+				output_file=filename
+			)
+			os.system(cmd)
 
-	if 'post_url' in config['timelapse']:
-		url = config['timelapse']['post_url']
-		with open('/tmp/capture.jpg', 'rb') as fp:
-			data=fp.read()
-		requests.post(
-			url=url,
-			data=data,
-			headers={'Content-Type': 'image/jpeg'}
-		)
+	if method in ['post', 'form']:
+		# FIXME: implement form
+		if 'post_url' in config['timelapse']:
+			url = config['timelapse']['post_url']
+			with open('/tmp/capture.jpg', 'rb') as fp:
+				data=fp.read()
+			requests.post(
+				url=url,
+				data=data,
+				headers={'Content-Type': 'image/jpeg'}
+			)
+
+	if method == 'smb':
+		# FIXME: mount /data and copy
+		pass
+
+	if method == 'local':
+		os.system('mount -o remount,rw /data')
+		with open(os.path.join('/data', filename), 'wb') as fout:
+			with open('/tmp/capture.jpg', 'rb') as fin:
+				fout.write(fin.read())
+		os.system('mount -o remount,ro /data')
 
 
 def capture_image(cam, settings):

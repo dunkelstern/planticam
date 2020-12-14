@@ -1,4 +1,5 @@
 import re
+import os
 from flask import Blueprint, request, redirect, url_for, render_template
 from flask_login import login_required, current_user
 
@@ -53,6 +54,7 @@ def settings_view():
             with writeable_config():
                 with open('/boot/wpa_supplicant.conf', 'w') as fp:
                     fp.write(wpa_config)
+            os.system('systemctl restart wpa_supplicant_wlan0')
         # save username/password form
         if 'username' in request.form:
             current_user.username = request.form['username']

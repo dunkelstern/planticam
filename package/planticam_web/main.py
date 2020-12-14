@@ -1,4 +1,5 @@
 import os
+import subprocess
 from time import sleep
 from datetime import datetime
 
@@ -42,6 +43,11 @@ def unauthorized():
 def inject_systime():
     return dict(systime=datetime.now())
 
+
+@app.context_processor
+def inject_ip():
+    ip = subprocess.check_output("ip address show dev wlan0 scope global|sed -e '/\s*inet\s\s*/!d' -e 's/\s*inet\s*\([0-9.]*\).*/\1/'", shell=True)
+    return dict(ipv4=ip.strip())
 
 @app.context_processor
 def inject_navigation():

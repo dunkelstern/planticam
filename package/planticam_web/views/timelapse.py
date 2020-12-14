@@ -59,13 +59,13 @@ def timelapse_view():
                 )
             if settings['upload_mode'] == 'local':
                 # check if we have a data partition on the sd card
-                os.system('umount /data')
-                ret = os.system('mount /data')
+                os.system('/usr/bin/umount /data')
+                ret = os.system('/usr/bin/mount /data')
                 if ret != 0:
                     # partition does not exist, try to create one
                     # /dev/mmcblk0p3
                     ret = os.system('/usr/bin/make_data_partition.sh')
-                    ret = os.system('mount /data')
+                    ret = os.system('/usr/bin/mount /data')
 
             save_config(get_config())
 

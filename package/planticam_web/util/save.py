@@ -6,11 +6,11 @@ CONFIG_FILE = '/boot/planticam.conf'
 
 @contextmanager
 def writeable_config():
-    os.system('/sbin/mount -o remount,rw /boot')
+    os.system('/usr/bin/mount -o remount,rw /boot')
     try:
         yield
     finally:
-        os.system('/sbin/mount -o remount,ro /boot')
+        os.system('/usr/bin/mount -o remount,ro /boot')
 
 
 def save_config(config: ConfigParser):

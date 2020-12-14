@@ -1,7 +1,6 @@
 #!/bin/bash
 
 BLOCK_DEVICE="/dev/mmcblk0"
-BLOCK_DEVICE="/dev/sda"
 
 echo "Creating partition..."
 sudo fdisk $BLOCK_DEVICE <<EOF

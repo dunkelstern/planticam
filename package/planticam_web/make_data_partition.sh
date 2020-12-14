@@ -3,7 +3,7 @@
 BLOCK_DEVICE="/dev/mmcblk0"
 
 echo "Creating partition..."
-sudo fdisk $BLOCK_DEVICE <<EOF
+fdisk $BLOCK_DEVICE <<EOF
 n
 p
 3
@@ -16,4 +16,4 @@ w
 EOF
 
 echo "Formatting partition..."
-sudo mkfs.vfat ${BLOCK_DEVICE}p3
+mkfs.vfat ${BLOCK_DEVICE}p3

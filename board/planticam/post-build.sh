@@ -30,6 +30,7 @@ if grep -qE '/data' "${TARGET_DIR}/etc/fstab"; then
 	mv "${TARGET_DIR}/etc/fstab.new" "${TARGET_DIR}/etc/fstab"
 fi
 echo '/dev/mmcblk0p3  /data           vfat    noauto,ro,uid=0,gid=0,dmask=0077,fmask=0077' >> "${TARGET_DIR}/etc/fstab"
+mkdir -p  "${TARGET_DIR}"/data
 
 # Disable fsck on root
 sed -ie '/^\/dev\/root/ s/0 1/0 0/' "${TARGET_DIR}/etc/fstab"

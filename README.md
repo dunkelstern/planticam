@@ -209,45 +209,55 @@ write progress, which is good as the `dd` command may appear to hang while the s
 Example:
 
 ```ini
-[timelapse]
-enabled=1
-delay=10
-upload_cmd=scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -q -i /boot/id_ed25519 {input_file} user@host:/path/to/{output_file}
-resolution_x=2592
-resolution_y=1944
-exposure_mode=auto
-awb_mode=auto
+[web]
+secret_key = apAkGhEL6bve1NwB/RzQSuIEafI=
+username = admin
+password = sha256:50000:y1c7SCo95G8FTkY8gXsmwQ==:XrTm1s1P6qDabh1pCNAVUL84eVvvLjW-OwwbnN_yJgs=
 
-[stream]
-enabled=0
-bitrate_kbps=3000
-framerate=30
-resolution_x=1920
-resolution_y=1080
-exposure_mode=auto
-awb_mode=auto
-destination=rtmp://example.com/live/planticam
+[image_settings]
+resolution_x = 2592
+resolution_y = 1944
+rotation = 0
+iso = auto
+exposure_mode = auto
+exposure_compensation = 0
+metering_mode = average
+drc = off
+awb_mode = auto
+awb_gain_red = 0.9
+awb_gain_blue = 0.9
+brightness = 50
+contrast = 0
+saturation = 0
+sharpness = 0
+denoise = 0
+
+[timelapse]
+enable = on
+delay = 120
+upload_mode = none
+upload_server = localhost
+upload_path = /data
+upload_auth_user = planticam
+upload_auth_password =
+upload_form_field =
+upload_cmd = SSHPASS= sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -q -i /boot/id_ed25519 {input_file} planticam@localhost:/data/{output_file}
+weekday_enable = off,off,off,off,off,off,off
+weekday_from = 00:00,00:00,00:00,00:00,00:00,00:00,00:00
+weekday_to = 23:59,23:59,23:59,23:59,23:59,23:59,23:59
+
+
 ```
 
 ### \[timelapse\]
 
-- `enabled`: boolean value, enable the timelapse mode
+- `enable`: boolean value, enable the timelapse mode
 - `delay`: delay in seconds between photos
 - `upload_cmd`: (optional) command to run to upload the image somewhere, the example command uploads to a SSH server
   which has the `id_ed25519.pub` key in their `authorized_keys`-file. Has 2 placeholders: `{input_file}` the source
   file and `{output_file}` the output filename (usually `planticam-YYYY-MM-DD_HH-MM-SS.jpg`)
 - `post_url`: (optional) URL to upload the image to, it will send a `HTTP POST`-request with `Content-Type: image/jpeg`
   and the JPEG binary as is in the body
-
-### \[stream\]
-
-- `enabled`: boolean value, enable the video mode. Be aware that video streaming mode overrides the image resolution of
-  timelapse mode if both are enabled
-- `bitrate_kbps`: Video bitrate
-- `framerate`: Video framerate, see [picamera documentation](https://picamera.readthedocs.io/en/release-1.12/fov.html)
-  for hardware limitations
-- `destination`: RTMP server URL to stream the video to
-- `include_audio`: boolean value, if you have a sound device on the Pi you can enable the audio track with this setting
 
 ### \[image_settings\]
 
@@ -266,6 +276,9 @@ destination=rtmp://example.com/live/planticam
   `fluorescent`, `incandescent`, `flash` or `horizon`)
 - `brightness`: (optional) Brightness from 0-100, defaults to 50
 - `contrast`: (optional) Contrast from -100-100, defaults to 0
+- `saturation`: (optional) Saturation from -100-100, defaults to 0
+- `sharpness`: (optional) Sharpness from -100-100, defaults to 0
+- `denoise`: (optional) Denoise ration from -100-100, defaults to 0
 
 
 ## Credits

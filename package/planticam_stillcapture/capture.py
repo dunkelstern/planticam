@@ -64,7 +64,7 @@ def main():
 
 	while True:
 		config.read('/boot/planticam.conf')
-		if config['timelapse']['enabled'] not in ['1', 'yes', 'on', 'true']:
+		if config['timelapse']['enable'] not in ['1', 'yes', 'on', 'true']:
 			if cam is not None:
 				cam.close()
 				cam = None

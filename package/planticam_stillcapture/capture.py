@@ -56,7 +56,7 @@ def capture_image(cam, settings):
 	if iso == 'auto':
 		iso = '0'
 	cam.iso = int(iso)
-	cam.metering_mode = settings.get('metering_mode', 'average')
+	cam.meter_mode = settings.get('metering_mode', 'average')
 	cam.drc_strength = settings.get('drc', 'off')
 	if cam.awb_mode == 'off':
 		cam.awb_gains = (float(settings.get('awb_gain_red', '0.9')), float(settings.get('awb_gain_blue', '0.9')))

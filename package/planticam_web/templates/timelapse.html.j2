@@ -10,43 +10,231 @@ day the camera will be active</p>
 
 <ul uk-accordion="multiple: true">
     <li class="uk-open">
-        <a class="uk-accordion-title uk-background-muted uk-padding-small" href="#">Frequency</a>
+        <a class="uk-accordion-title uk-background-muted uk-padding-small" href="#">General settings</a>
         <div class="uk-accordion-content">
-            <form class="uk-form-horizontal uk-margin-large" action="{{ url_for('settings.settings_view') }}" method="POST">
+            <form class="uk-form-horizontal uk-margin-large" action="{{ url_for('timelapse.timelapse_view') }}" method="POST">
 
                 <div class="uk-margin">
-                    <label class="uk-form-label" for="form-wifi-bssid">WiFi Network name</label>
+                    <label class="uk-form-label" for="form-enable_timelapse">Enable timelapse</label>
                     <div class="uk-form-controls">
-                        <input name="bssid" class="uk-input" id="form-wifi-bssid" type="text" placeholder="Name">
+                        <input name="enable_timelapse" class="uk-checkbox" id="form-enable_timelapse" type="checkbox" {% if settings['enable'] %}checked{% endif %}>
                     </div>
                 </div>
 
                 <div class="uk-margin">
-                    <label class="uk-form-label" for="form-password">WiFi Password</label>
+                    <label class="uk-form-label" for="form-delay">Delay between captures</label>
                     <div class="uk-form-controls">
-                        <input name="password" class="uk-input" id="form-password" type="password" placeholder="Password">
+                        <div uk-form-custom>
+                            <input name="delay" class="uk-input uk-form-width-medium" id="form-delay" type="text" placeholder="Delay" value="{{ settings['delay'] }}">
+                        </div>
+                        <span>seconds</span>
                     </div>
                 </div>
 
                 <div class="uk-margin" uk-margin>
-                    <button class="uk-button uk-button-default uk-align-right">Save</button>
+                    <button class="uk-button uk-button-primary uk-align-right">Save</button>
                 </div>
 
             </form>
         </div>
     </li>
     <li>
-        <a class="uk-accordion-title uk-background-muted uk-padding-small" href="#">Schedule</a>
+        <a class="uk-accordion-title uk-background-muted uk-padding-small" href="#">Destination</a>
         <div class="uk-accordion-content">
-            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor reprehenderit.</p>
+            <form class="uk-form-horizontal uk-margin-large" action="{{ url_for('timelapse.timelapse_view') }}" method="POST">
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-upload_mode">Mode</label>
+                    <div class="uk-form-controls">
+                        <select class="uk-select" id='form-upload_mode' name="upload_mode">
+                            <option value="none" {% if settings['upload_mode'] == 'none' %}selected{% endif %}>Do not save images</option>
+                            <option value="sftp" {% if settings['upload_mode'] == 'sftp' %}selected{% endif %}>SFTP Upload to server</option>
+                            <option value="scp" {% if settings['upload_mode'] == 'scp' %}selected{% endif %}>SCP Upload to server</option>
+                            <option value="smb" {% if settings['upload_mode'] == 'smb' %}selected{% endif %}>SMB/CIFS Network share (e.g. Windows)</option>
+                            <option value="post" {% if settings['upload_mode'] == 'post' %}selected{% endif %}>HTTP Post binary upload</option>
+                            <option value="form" {% if settings['upload_mode'] == 'form' %}selected{% endif %}>HTTP Form upload</option>
+                            <option value="local" {% if settings['upload_mode'] == 'local' %}selected{% endif %}>Save to SD-Card locally</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="uk-margin" id='upload_username' hidden>
+                    <label class="uk-form-label" for="form-upload_username">Username</label>
+                    <div class="uk-form-controls">
+                        <input name="upload_username" class="uk-input uk-form-width-large" id="form-upload_username" type="text" placeholder="Username" value="{{ settings['upload_auth_user'] }}">
+                        <p class="uk-text-small uk-text-muted">
+                            Specify the username to use for uploading, this can mean different things for different modes:
+                            <dl class="uk-description-list uk-text-muted">
+                                <dt>SFTP / SCP</dt>
+                                <dd>The username on the server</dd>
+                                <dt>SMB</dt>
+                                <dd>Username for the network share (or empty for Anonymous)</dd>
+                                <dt>HTTP Post / Form</dt>
+                                <dd>Username for basic auth</dd>
+                            </dl>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="uk-margin" id='upload_password' hidden>
+                    <label class="uk-form-label" for="form-upload_password">Password</label>
+                    <div class="uk-form-controls">
+                        <div class="uk-inline">
+                            <script>
+                                function toggle_upload_password() {
+                                    const button = document.getElementById('form-upload_password-toggle');
+                                    const input = document.getElementById('form-upload_password');
+
+                                    if (input.type === 'password') {
+                                        button.classList.add('uk-button-primary');
+                                        input.type = 'text';
+                                    } else {
+                                        button.classList.remove('uk-button-primary');
+                                        input.type = 'password';
+                                    }
+
+                                    return false;
+                                }
+                            </script>
+                            <button id='form-upload_password-toggle' class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock" type="button" onclick="toggle_upload_password()"></button>
+                            <input name="upload_password" class="uk-input uk-form-width-large" id="form-upload_password" type="password" placeholder="Password" value="{{ settings['upload_auth_password'] }}">
+                        </div>
+                        <p class="uk-text-small uk-text-muted">
+                            Specify the password to use for uploading, this can mean different things for different modes:
+                            <dl class="uk-description-list uk-text-muted">
+                                <dt>SFTP / SCP</dt>
+                                <dd>
+                                    If you can not use the SSH client key, a password for the server. It is strongly recommended to use a SSH key.
+                                    The public key of this device is:<br>
+                                    <code>{{ ssh_client_key }}</code>
+                                </dd>
+                                <dt>SMB</dt>
+                                <dd>Password for the network share (or empty for Anonymous)</dd>
+                                <dt>HTTP Post / Form</dt>
+                                <dd>Password for basic auth</dd>
+                            </dl>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="uk-margin" id='upload_server' hidden>
+                    <label class="uk-form-label" for="form-upload_server">Server</label>
+                    <div class="uk-form-controls">
+                        <input name="upload_server" class="uk-input uk-form-width-large" id="form-upload_server" type="text" placeholder="Server" value="{{ settings['upload_server'] }}">
+                    </div>
+                </div>
+
+                <div class="uk-margin" id='upload_path' hidden>
+                    <label class="uk-form-label" for="form-upload_path">Path on the server</label>
+                    <div class="uk-form-controls">
+                        <input name="upload_path" class="uk-input uk-form-width-large" id="form-upload_path" type="text" placeholder="Path" value="{{ settings['upload_path'] }}">
+                    </div>
+                </div>
+
+                <div class="uk-margin" id='upload_form_field' hidden>
+                    <label class="uk-form-label" for="form-upload_form_field">Name of the form field</label>
+                    <div class="uk-form-controls">
+                        <input name="upload_form_field" class="uk-input uk-form-width-large" id="form-upload_form_field" type="text" placeholder="Field name" value="{{ settings['upload_form_field'] }}">
+                    </div>
+                </div>
+
+                <div class="uk-margin" uk-margin>
+                    <button class="uk-button uk-button-primary uk-align-right">Save</button>
+                </div>
+
+
+                <script>
+                    const upload_mode = document.getElementById('form-upload_mode');
+                    upload_mode.addEventListener('change', (event) => {
+                        const upload_username = document.getElementById('upload_username');
+                        const upload_password = document.getElementById('upload_password');
+                        const upload_server = document.getElementById('upload_server');
+                        const upload_path = document.getElementById('upload_path');
+                        const upload_form_field = document.getElementById('upload_form_field');
+                        switch(event.target.value) {
+                            case 'none':
+                            case 'local':
+                                [
+                                    upload_username,
+                                    upload_password,
+                                    upload_server,
+                                    upload_path,
+                                    upload_form_field
+                                ].forEach(item => item.setAttribute('hidden', true));
+                                break;
+                            case 'sftp':
+                            case 'scp':
+                            case 'smb':
+                            case 'post':
+                                [
+                                    upload_form_field
+                                ].forEach(item => item.setAttribute('hidden', true));
+                                [
+                                    upload_username,
+                                    upload_password,
+                                    upload_server,
+                                    upload_path
+                                ].forEach(item => item.removeAttribute('hidden'))
+                                break;
+                            case 'form':
+                                [
+                                    upload_username,
+                                    upload_password,
+                                    upload_server,
+                                    upload_path,
+                                    upload_form_field
+                                ].forEach(item => item.removeAttribute('hidden'));
+                                break;
+                        }
+                    });
+
+                    // trigger initial change event to update the form
+                    const event = new Event('change');
+                    upload_mode.dispatchEvent(event);
+                </script>
+            </form>
         </div>
     </li>
+    <li>
+        <a class="uk-accordion-title uk-background-muted uk-padding-small" href="#">Schedule</a>
+        <div class="uk-accordion-content">
+            <form class="uk-form-horizontal uk-margin-large" action="{{ url_for('timelapse.timelapse_view') }}" method="POST">
+                {% for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %}
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-weekday_{{ loop.index  }}_enable">{{ day }}</label>
+                    <div class="uk-form-controls">
+                        <div uk-form-custom>
+                            <input name="weekday_{{ loop.index }}_enable" class="uk-checkbox" id="form-weekday_{{ loop.index }}_enable" type="checkbox" {% if weekday_enable[loop.index-1] == 'on' %}checked{% endif %}>
+                            <span class="uk-margin-small-left uk-margin-small-right uk-text-muted">from</span>
+                            <input name="weekday_{{ loop.index }}_from" class="uk-input uk-form-width-small" id="form-weekday_{{ loop.index }}_from" type="text" placeholder="00:00" value="{{ weekday_from[loop.index-1] }}">
+                            <span class="uk-margin-small-left uk-margin-small-right uk-text-muted">to</span>
+                            <input name="weekday_{{ loop.index }}_to" class="uk-input uk-form-width-small" id="form-weekday_{{ loop.index }}_to" type="text" placeholder="00:00" value="{{ weekday_to[loop.index-1] }}">
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="uk-margin" uk-margin>
+                    <button class="uk-button uk-button-primary uk-align-right">Save</button>
+                </div>
+
+            </form>
+        </div>
+    </li>
+    <!-- TODO
     <li>
         <a class="uk-accordion-title uk-background-muted uk-padding-small" href="#">External light</a>
         <div class="uk-accordion-content">
             <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat proident.</p>
         </div>
     </li>
+    <li>
+        <a class="uk-accordion-title uk-background-muted uk-padding-small" href="#">Trigger</a>
+        <div class="uk-accordion-content">
+            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat proident.</p>
+        </div>
+    </li>
+    -->
 </ul>
 
 

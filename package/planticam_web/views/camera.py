@@ -49,7 +49,10 @@ def camera_view():
         # postprocessing form
         if 'sharpness' in request.form:
             settings['sharpness'] = request.form['sharpness']
-            settings['denoise'] = request.form['denoise']
+            if 'denoise' in request.form:
+                settings['denoise'] = 'on'
+            else:
+                settings['denoise'] = 'off'
 
             save_config(get_config())
 

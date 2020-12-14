@@ -2,8 +2,8 @@
 Description=Planticam still image capture service
 
 [Service]
-Type=exec
 ExecStart=/usr/bin/python3 /opt/planticam_stillcapture/capture.py
+ExecReload=kill -USR1 $MAINPID
 Restart=on-failure
 StandardOutput=syslog
 StandardError=syslog

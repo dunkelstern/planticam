@@ -22,7 +22,7 @@ endef
 
 define PLANTICAM_STILLCAPTURE_INSTALL_INIT_SYSTEMD
 	mkdir -p $(TARGET_DIR)/etc/systemd/system/$(PLANTICAM_STILLCAPTURE_INIT_SYSTEMD_TARGET)
-	$(INSTALL) -D -m 644 $(PLANTICAM_STILLCAPTURE_PKGDIR)/planticam_still.service $(TARGET_DIR)/usr/lib/systemd/system/planticam_sill.service
+	$(INSTALL) -D -m 644 $(PLANTICAM_STILLCAPTURE_PKGDIR)planticam_still.service $(TARGET_DIR)/usr/lib/systemd/system/planticam_sill.service
 endef
 
 $(eval $(generic-package))

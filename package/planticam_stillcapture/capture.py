@@ -1,4 +1,5 @@
 import os
+import signal
 import configparser
 from socket import gethostname
 from datetime import datetime
@@ -7,6 +8,16 @@ from time import sleep
 import requests
 import exifread
 from picamera import PiCamera
+
+reload_service = False
+
+
+def handler(signum, frame):
+	global reload_service
+
+	if signum == signal.SIGUSR1:
+		print('Reload signal received!')
+		reload_service = True
 
 
 def upload_file(config, date):
@@ -36,10 +47,21 @@ def upload_file(config, date):
 
 def capture_image(cam, settings):
 	cam.resolution = (int(settings['resolution_x']), int(settings['resolution_y']))
+	cam.rotation = int(settings.get('rotation', '0'))
 	aspect_ratio = cam.resolution[1] / cam.resolution[0]
-	cam.exposure_mode = settings['exposure_mode'] if 'exposure_mode' in settings else 'auto'
-	cam.awb_mode = settings['awb_mode'] if 'awb_mode' in settings else 'auto'
-	# TODO: other camera settings
+	cam.exposure_mode = settings.get('exposure_mode', 'auto')
+	cam.exposure_compensation = int(settings.get('exposure_compensation', '0'))
+	cam.awb_mode = settings.get('awb_mode', 'auto')
+	cam.iso = settings.get('iso', 'auto')
+	cam.metering_mode = settings.get('metering_mode', 'average')
+	cam.drc_strength = settings.get('drc', 'off')
+	if cam.awb_mode == 'off':
+		cam.awb_gains = (float(settings.get('awb_gain_red', '0.9')), float(settings.get('awb_gain_blue', '0.9')))
+	cam.brightness = int(settings.get('brightness', '50'))
+	cam.contrast = int(settings.get('contrast', '0'))
+	cam.saturation = int(settings.get('saturation', '0'))
+	cam.image_denoise = settings.get('denoise', 'on') in ['1', 'yes', 'on', 'true']
+	cam.sharpness = int(settings.get('sharpness', '0'))
 
 	cam.framerate = 1
 	try:
@@ -52,27 +74,34 @@ def capture_image(cam, settings):
 	# now extract the thumbnail into it's own file
 	with open('/tmp/capture.jpg', 'rb') as fp:
 		tags = exifread.process_file(fp, stop_tag='JPEGThumbnail')
-		if 'JPEGthumbnail' in tags:
+		if 'JPEGThumbnail' in tags:
 			with open('/tmp/capture_thumb.jpg', 'wb') as o:
 				o.write(tags['JPEGThumbnail'])
 
 
 def main():
+	global reload_service
+
 	config = configparser.ConfigParser()
 
 	cam = None
 
 	while True:
 		config.read('/boot/planticam.conf')
-		if config['timelapse']['enable'] not in ['1', 'yes', 'on', 'true']:
+		if config['timelapse']['enable'] not in ['1', 'yes', 'on', 'true'] and not reload_service is True:
 			if cam is not None:
 				cam.close()
 				cam = None
-			sleep(60)
+			for i in range(0, 60):
+				sleep(1)
+				if reload_service is True:
+					break
 			continue
 
 		if cam is None:
 			cam = PiCamera()
+
+		reload_service = False
 
 		start = datetime.now()
 
@@ -84,8 +113,14 @@ def main():
 		delta = end - start
 
 		sleep_time = float(config['timelapse']['delay']) - delta.total_seconds()
+		while sleep_time > 1:
+			sleep(1)
+			sleep_time -= 1
+			if reload_service is True:
+				sleep_time = 0
 		if sleep_time > 0:
 			sleep(sleep_time)
 
 if __name__ == '__main__':
+	signal.signal(signal.SIGUSR1, handler)
 	main()

@@ -55,6 +55,7 @@ def settings_view():
                 with open('/boot/wpa_supplicant.conf', 'w') as fp:
                     fp.write(wpa_config)
             os.system('systemctl restart wpa_supplicant_wlan0')
+            os.system('systemctl restart network')
         # save username/password form
         if 'username' in request.form:
             current_user.username = request.form['username']

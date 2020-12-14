@@ -5,10 +5,8 @@ Description=Planticam still image capture service
 ExecStart=/usr/bin/python3 /opt/planticam_stillcapture/capture.py
 ExecReload=kill -USR1 $MAINPID
 Restart=on-failure
-StandardOutput=syslog
-StandardError=syslog
 SyslogIdentifier=planticamstill
 WorkingDirectory=/opt/planticam_stillcapture
 
 [Install]
-WantedBy=basic.target
+WantedBy=multi-user.target

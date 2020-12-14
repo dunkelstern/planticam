@@ -3,10 +3,8 @@ Description=Planticam webinterface
 
 [Service]
 ExecStart=/usr/bin/python3 /opt/planticam_web/main.py
-StandardOutput=syslog
-StandardError=syslog
 SyslogIdentifier=planticamweb
 WorkingDirectory=/opt/planticam_web
 
 [Install]
-WantedBy=basic.target
+WantedBy=multi-user.target

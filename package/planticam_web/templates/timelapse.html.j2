@@ -17,7 +17,7 @@ day the camera will be active</p>
                 <div class="uk-margin">
                     <label class="uk-form-label" for="form-enable_timelapse">Enable timelapse</label>
                     <div class="uk-form-controls">
-                        <input name="enable_timelapse" class="uk-checkbox" id="form-enable_timelapse" type="checkbox" {% if settings['enable'] %}checked{% endif %}>
+                        <input name="enable_timelapse" class="uk-checkbox" id="form-enable_timelapse" type="checkbox" {% if settings['enable'] == 'on' %}checked{% endif %}>
                     </div>
                 </div>
 

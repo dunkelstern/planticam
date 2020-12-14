@@ -52,7 +52,10 @@ def capture_image(cam, settings):
 	cam.exposure_mode = settings.get('exposure_mode', 'auto')
 	cam.exposure_compensation = int(settings.get('exposure_compensation', '0'))
 	cam.awb_mode = settings.get('awb_mode', 'auto')
-	cam.iso = settings.get('iso', 'auto')
+	iso = settings.get('iso', 'auto')
+	if iso == 'auto':
+		iso = '0'
+	cam.iso = int(iso)
 	cam.metering_mode = settings.get('metering_mode', 'average')
 	cam.drc_strength = settings.get('drc', 'off')
 	if cam.awb_mode == 'off':

@@ -46,8 +46,8 @@ def inject_systime():
 
 @app.context_processor
 def inject_ip():
-    ip = subprocess.check_output("ip address show dev wlan0 scope global|sed -e '/\s*inet\s\s*/!d' -e 's/\s*inet\s*\([0-9.]*\).*/\1/'", shell=True)
-    return dict(ipv4=ip.strip())
+    ip = subprocess.check_output(r"ip address show dev wlan0 scope global|sed -e '/\s*inet\s\s*/!d' -e 's/\s*inet\s*\([0-9.]*\).*/\1/'", shell=True)
+    return dict(ipv4=ip.decode('utf-8').strip())
 
 @app.context_processor
 def inject_navigation():

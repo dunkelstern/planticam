@@ -13,12 +13,15 @@ timelapse = Blueprint('timelapse', __name__, template_folder='templates')
 def timelapse_view():
     settings = get_config()['timelapse']
     if request.method == 'GET':
+        with open('/boot/id_ed25519.pub', 'r') as fp:
+            ssh_key = fp.read()
         return render_template(
             'timelapse.html.j2',
             settings=settings,
             weekday_enable=settings['weekday_enable'].split(','),
             weekday_from=settings['weekday_from'].split(','),
-            weekday_to=settings['weekday_to'].split(',')
+            weekday_to=settings['weekday_to'].split(','),
+            ssh_pub_key=ssh_key
         )
     if request.method == 'POST':
         # generic form

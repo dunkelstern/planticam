@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 
-from flask import Flask, redirect, url_for, request, send_file
+from flask import Flask, redirect, url_for, request, send_file, render_template
 from flask_login import LoginManager, login_required, current_user
 
 from util.user import User, Anonymous
@@ -36,9 +36,16 @@ def unauthorized():
     # do stuff
     return redirect(url_for('login.login_view'))
 
+
+@app.context_processor
+def inject_systime():
+    return dict(systime=datetime.now())
+
+
 @app.context_processor
 def inject_navigation():
     return dict(nav=request.path)
+
 
 @app.context_processor
 def inject_last_capture():
@@ -54,7 +61,7 @@ def inject_last_capture():
 @app.route('/')
 @login_required
 def index():
-    return redirect(url_for('settings.settings_view'))
+    return render_template('index.html.j2')
 
 
 @app.route('/current_image.jpg')
@@ -69,6 +76,19 @@ def current_image():
     return send_file(img, mimetype='image/jpeg')
 
 
+@app.route('/last-capture-time')
+def last_capture_time():
+    if os.path.exists('/tmp/capture_thumb.jpg'):
+        return str(os.path.getmtime('/tmp/capture_thumb.jpg'))
+    return '0'
+
+
+@app.route('/capture-now', methods=["POST"])
+def capture_now():
+    os.system('systemctl reload planticam_still')
+    return redirect(request.referrer)
+
+
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=80)
+    app.run(debug=True, host='0.0.0.0', port=5000)
 

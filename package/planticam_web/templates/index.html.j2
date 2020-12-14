@@ -1,0 +1,46 @@
+{% extends "base.html.j2" %}
+
+{% block title %}Index{% endblock %}
+
+{% block content %}
+   <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1@s uk-margin">
+        <div class="uk-card-media-top uk-cover-container">
+            <img uk-cover id="last_capture_image" src="current_image.jpg" alt="Last camera image taken">
+            <canvas width="736" height="552"></canvas>
+        </div>
+        <div class="uk-card-body uk-padding">
+            <p>Last camera image: <br>
+                <span id="last_capture_date">{% if last_capture_date %}{{ last_capture_date.strftime("%Y-%m-%d %H:%M:%S") }}{% else %}No image captured{% endif %}</span>
+            </p>
+            <form method="POST" class="uk-form uk-align-center" action="{{ url_for('capture_now') }}">
+                <button class="uk-button uk-button-default"><span class="uk-icon uk-margin-small-right" uk-icon="icon: camera"></span> Capture now</button>
+            </form>
+        </div>
+        <script>
+            const time = document.getElementById('systime');
+            window.current = moment("{{ systime.strftime('%Y-%m-%dT%H:%M:%S') }}", 'YYYY-MM-DDTHH:mm:ss')
+            window.setInterval(() => {
+                window.current.add(1, 'seconds');
+                time.innerHTML = window.current.format('YYYY-MM-DD HH:mm:ss');
+            }, 1000);
+
+            window.last_capture_time = 0;
+            window.setInterval(() => {
+                fetch("{{ url_for('last_capture_time') }}")
+                    .then(response => response.text())
+                    .then(text => {
+                        if (Number(text) !== window.last_capture_time) {
+                            window.last_capture_time = Number(text);
+                            const img = document.getElementById('last_capture_image');
+                            const date = document.getElementById('last_capture_date');
+                            date.innerHTML = moment(text, 'X').format('YYYY-MM-DD HH:mm:ss');
+                            img.src = 'current_image.jpg?date=' + text;
+                        }
+                    });
+            }, 10000);
+        </script>
+    </div>
+{% endblock %}
+
+{% block preview_image %}
+{% endblock %}

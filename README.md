@@ -6,25 +6,27 @@ using one of the many Raspberry Pi CSI compatible cameras.
 The idea is to have a stable maintenance free appliance that will not crash and burn if
 it looses power (for example because it is turned on and off by a timer switch)
 
+<img src="docs/images/settings.png" width="400"> <img src="docs/images/timelapse.png" width="400">
+
+<img src="case/front.jpg" width="400"> <img src="case/with_gpio_back.jpg" width="400">
+
 ## Features
 
-- Simple setup via config file on boot partition or Webinterface on USB Gadget Ethernet
+- Simple setup via config file on boot partition or web interface on USB Gadget Ethernet
 - Automatic image capture in timelapse mode
 - Image upload to storage server, no local storage
 - RTMP video streaming (WIP)
 - Audio recording (WIP, only if hardware is available)
 - 3D printed case AMF and FreeCAD files
+- Web interface for configuration (reachable via Wifi of USB Ethernet)
 
 ## Todo
 
-- Most image settings (brightness, contrast, exposure_compensation, iso, meter_mode, rotation)
 - RTMP video streaming
 - Make video and timelapse modes cooperate
 - Audio recording
-- Web-interface
 - Add sensor readouts on GPIO header to be added as overlay onto the image or stored in exif metadata
 - Add sensor plugin interface to allow the user to add sensor readout plugins to the boot partition
-- Screenshots and photo of the finished device
 
 ## What you need
 

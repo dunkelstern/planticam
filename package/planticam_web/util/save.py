@@ -2,7 +2,7 @@ import os
 from contextlib import contextmanager
 from configparser import ConfigParser
 
-CONFIG_FILE = './planticam.conf'
+CONFIG_FILE = '/boot/planticam.conf'
 
 @contextmanager
 def writeable_config():

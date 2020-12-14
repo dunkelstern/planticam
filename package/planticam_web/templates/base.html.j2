@@ -8,6 +8,16 @@
         <script src="{{ url_for('static', filename='js/uikit.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/uikit-icons.min.js') }}"></script>
         {% block header %}{% endblock %}
+        <style>
+            html {
+                overflow-y: scroll;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-size: 50%;
+                background-image: url("{{ url_for('static', filename='img/grass.svg') }}");
+                background-position: bottom right;
+            }
+        </style>
     </head>
     <body>
 
@@ -39,12 +49,12 @@
                         Timelapse
                     </a>
                 </li>
-                <li {% if nav == '/video' %}class="uk-active"{% endif %}>
+                {# <li {% if nav == '/video' %}class="uk-active"{% endif %}>
                     <a href="{{ url_for('video.video_view') }}">
                         <span class="uk-icon uk-margin-small-right" uk-icon="icon: video-camera"></span>
                         Video
                     </a>
-                </li>
+                </li> #}
                 <li {% if nav == '/about' %}class="uk-active"{% endif %}>
                     <a href="{{ url_for('about.about_view') }}">
                         <span class="uk-icon uk-margin-small-right" uk-icon="icon: info"></span>

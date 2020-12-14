@@ -1,4 +1,5 @@
 import os
+from time import sleep
 from datetime import datetime
 
 from flask import Flask, redirect, url_for, request, send_file, render_template
@@ -86,6 +87,7 @@ def last_capture_time():
 @app.route('/capture-now', methods=["POST"])
 def capture_now():
     os.system('systemctl reload planticam_still')
+    sleep(3)
     return redirect(request.referrer)
 
 
